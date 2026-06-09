@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+requests
+httpx
+pydantic
+numpy
+vosk
+sounddevice
+argostranslate
+pdfplumber
+python-docx
+pandas
+matplotlib

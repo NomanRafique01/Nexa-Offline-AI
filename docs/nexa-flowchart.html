@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Nexa — Interactive Flowchart</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--e:#7c3aed;--f:#2563eb;--b:#059669;--x:#ea580c;--d:#ca8a04;--u:#e11d48;
+--ebg:#ede9fe;--fbg:#dbeafe;--bbg:#d1fae5;--xbg:#ffedd5;--dbg:#fef9c3;--ubg:#ffe4e6;
+--ebr:#a78bfa;--fbr:#60a5fa;--bbr:#34d399;--xbr:#fb923c;--dbr:#facc15;--ubr:#fb7185;
+--bg:#0f172a;--cbg:#1e293b;--tx:#e2e8f0;--txd:#94a3b8;--ln:#475569}
+html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);overflow:hidden}
+.hd{background:linear-gradient(135deg,#1e1b4b,#0f172a);padding:14px 24px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #334155;z-index:100}
+.hd svg{width:38px;height:38px;flex-shrink:0}
+.hd h1{font-size:20px;font-weight:700}
+.hd p{font-size:12px;color:var(--txd);margin-top:1px}
+.lg{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.lg-i{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--txd)}
+.lg-d{width:9px;height:9px;border-radius:3px}
+.mn{display:flex;height:calc(100vh - 68px)}
+.tp{width:360px;min-width:280px;background:#111827;border-right:1px solid #1e293b;overflow-y:auto;padding:10px 0;flex-shrink:0}
+.dp{flex:1;overflow-y:auto;padding:24px 28px}
+.sb{padding:8px 12px;border-bottom:1px solid #1e293b;position:sticky;top:0;background:#111827;z-index:10}
+.sb input{width:100%;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:6px 10px;color:var(--tx);font-size:12px;outline:none}
+.sb input:focus{border-color:#60a5fa}
+.tn{user-select:none}
+.tl{display:flex;align-items:center;gap:7px;padding:6px 12px 6px 0;cursor:pointer;border-radius:5px;margin:1px 6px;transition:background .15s;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl:hover{background:rgba(255,255,255,.06)}
+.tl.ac{background:rgba(255,255,255,.1)}
+.ta{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;color:#64748b;transition:transform .2s}
+.ta.ex{transform:rotate(90deg)}
+.ta.lf{visibility:hidden}
+.ti{width:16px;height:16px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700}
+.ti.e{background:var(--e)}.ti.f{background:var(--f)}.ti.b{background:var(--b)}.ti.x{background:var(--x)}.ti.d{background:var(--d)}.ti.u{background:var(--u)}
+.tc{overflow:hidden;transition:max-height .25s ease;max-height:0}
+.tc.op{max-height:5000px}
+.tc .tl{padding-left:18px}.tc .tc .tl{padding-left:36px}.tc .tc .tc .tl{padding-left:54px}.tc .tc .tc .tc .tl{padding-left:72px}
+.dt{font-size:18px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.dt .bd{font-size:9px;padding:2px 7px;border-radius:99px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.ds{font-size:12px;color:var(--txd);margin-bottom:18px;line-height:1.5}
+.dsec{margin-bottom:18px}
+.dsec h3{font-size:12px;font-weight:600;margin-bottom:6px;color:var(--txd);text-transform:uppercase;letter-spacing:.05em}
+.dc{background:var(--cbg);border:1px solid #334155;border-radius:8px;padding:12px 14px;margin-bottom:8px;transition:border-color .2s}
+.dc:hover{border-color:#475569}
+.dc h4{font-size:13px;font-weight:600;margin-bottom:3px}
+.dc p{font-size:11.5px;color:var(--txd);line-height:1.5}
+.dc code{background:#0f172a;padding:1px 5px;border-radius:3px;font-size:11px;color:#7dd3fc}
+.fr{display:flex;align-items:center;gap:6px;font-size:11.5px;margin-bottom:6px;flex-wrap:wrap}
+.fn{padding:4px 9px;border-radius:5px;font-weight:600;white-space:nowrap;font-size:11px}
+.fn.e{background:var(--ebg);color:var(--e);border:1px solid var(--ebr)}
+.fn.f{background:var(--fbg);color:var(--f);border:1px solid var(--fbr)}
+.fn.b{background:var(--bbg);color:var(--b);border:1px solid var(--bbr)}
+.fn.x{background:var(--xbg);color:var(--x);border:1px solid var(--xbr)}
+.fn.d{background:var(--dbg);color:var(--d);border:1px solid var(--dbr)}
+.fn.u{background:var(--ubg);color:var(--u);border:1px solid var(--ubr)}
+.fa{color:#64748b;font-size:14px;flex-shrink:0}
+.fl{color:var(--txd);font-size:10px;flex-shrink:0}
+.ct{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.ctg{font-size:10px;padding:2px 8px;border-radius:99px;cursor:pointer;transition:transform .12s}
+.ctg:hover{transform:scale(1.06)}
+.ctg.e{background:var(--e);color:#fff}.ctg.f{background:var(--f);color:#fff}.ctg.b{background:var(--b);color:#fff}.ctg.x{background:var(--x);color:#fff}.ctg.d{background:var(--d);color:#1e293b}.ctg.u{background:var(--u);color:#fff}
+.wc{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;gap:14px}
+.wc h2{font-size:22px;font-weight:700}.wc p{color:var(--txd);font-size:13px;max-width:380px;line-height:1.5}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#334155;border-radius:99px}
+</style>
+</head>
+<body>
+<div class="hd">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="22" fill="#ffb300"/><g stroke="#004953" stroke-width="3.5" stroke-linecap="round" fill="none"><line x1="36" y1="22" x2="36" y2="10"/><line x1="50" y1="22" x2="50" y2="6"/><line x1="64" y1="22" x2="64" y2="10"/><line x1="36" y1="78" x2="36" y2="90"/><line x1="50" y1="78" x2="50" y2="94"/><line x1="64" y1="78" x2="64" y2="90"/><line x1="22" y1="36" x2="10" y2="36"/><line x1="22" y1="50" x2="6" y2="50"/><line x1="22" y1="64" x2="10" y2="64"/><line x1="78" y1="36" x2="90" y2="36"/><line x1="78" y1="50" x2="94" y2="50"/><line x1="78" y1="64" x2="90" y2="64"/></g><rect x="22" y="22" width="56" height="56" rx="8" fill="#004953"/></svg>
+<div><h1>Nexa Application Flowchart</h1><p>Click any node to explore — interactive architecture map</p></div>
+<div class="lg">
+<div class="lg-i"><div class="lg-d" style="background:var(--e)"></div>Electron</div>
+<div class="lg-i"><div class="lg-d" style="background:var(--f)"></div>Frontend</div>
+<div class="lg-i"><div class="lg-d" style="background:var(--b)"></div>Backend</div>
+<div class="lg-i"><div class="lg-d" style="background:var(--x)"></div>External</div>
+<div class="lg-i"><div class="lg-d" style="background:var(--d)"></div>Data</div>
+<div class="lg-i"><div class="lg-d" style="background:var(--u)"></div>User</div>
+</div>
+</div>
+<div class="mn">
+<div class="tp"><div class="sb"><input type="text" placeholder="Search components…" id="si"></div><div id="tr"></div></div>
+<div class="dp" id="dp">
+<div class="wc" id="wv">
+<svg width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#ffb300" opacity=".25"/><rect x="22" y="22" width="56" height="56" rx="8" fill="#004953" opacity=".25"/></svg>
+<h2>Explore Nexa's Architecture</h2>
+<p>Click any node in the tree on the left to see its details, connections, and data flows. Expand branches to discover every component.</p>
+</div>
+<div id="dv" style="display:none"></div>
+</div>
+</div>
+<script src="flowchart-data.js"></script>
+<script src="flowchart-app.js"></script>
+</body>
+</html>

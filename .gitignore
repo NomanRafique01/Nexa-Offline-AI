@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+venv311/
+.env
+
+# Database
+*.db
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# Node / JS
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Builds & Outputs
+build/
+dist/
+release/
+outputs/
+inno-local/
+*.exe
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+
+# Large / Temp files
+structure.txt
+innosetup-*.exe
+
+# AI Models & Large Binaries (too large for GitHub)
+ollama/
+backend/piper/
+backend/vosk-model/
+backend/argos_packages/
+backend/argos-translate/
+backend/translation_models/
+backend/.local/
+
+# Pyodide packages (hundreds of large .whl files)
+frontend/public/pyodide/
+
+# Python virtual environments (nested)
+backend/venv/
+backend/venv311/

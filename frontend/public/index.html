@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>Nexa Offline AI</title>
+
+    <!-- Apply theme instantly before React loads -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem("nexa_theme") || "forest";
+        document.documentElement.setAttribute(
+          "data-theme",
+          theme === "forest" ? "" : theme
+        );
+      })();
+    </script>
+
+    <!-- Pyodide runtime — graceful offline fallback -->
+    <script>
+      window.__pyodideReady    = false;
+      window.__pyodideError    = null;
+      window.__pyodideProgress = 0;
+      window.__pyodideStage    = 'Unavailable';
+      window.__pyodide         = null;
+
+      (async function initPyodide() {
+        var PACKAGES = ['numpy', 'pandas', 'matplotlib', 'scipy', 'sympy', 'pillow'];
+
+        function setStage(stage, progress) {
+          window.__pyodideStage    = stage;
+          window.__pyodideProgress = progress;
+        }
+
+        try {
+          setStage('Loading Python runtime...', 10);
+
+          if (typeof loadPyodide === 'undefined') {
+            throw new Error('Pyodide not available (offline)');
+          }
+
+          var py = await loadPyodide({
+            indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/',
+          });
+
+          setStage('Loading micropip...', 40);
+          await py.loadPackage('micropip');
+
+          for (var i = 0; i < PACKAGES.length; i++) {
+            var pkg = PACKAGES[i];
+            setStage('Loading ' + pkg + '...', 40 + Math.round(((i + 1) / PACKAGES.length) * 55));
+            try { await py.loadPackage(pkg); } catch (e) {}
+          }
+
+          await py.runPythonAsync(
+            'try:\n' +
+            '    import matplotlib\n' +
+            '    matplotlib.use("Agg")\n' +
+            '    import matplotlib.pyplot as plt\n' +
+            '    def _plt_show_patched(*args, **kwargs):\n' +
+            '        import io, base64\n' +
+            '        buf = io.BytesIO()\n' +
+            '        plt.savefig(buf, format="png", bbox_inches="tight", dpi=120)\n' +
+            '        buf.seek(0)\n' +
+            '        b64 = base64.b64encode(buf.read()).decode("utf-8")\n' +
+            '        print("__PLOT__:" + b64)\n' +
+            '        plt.close("all")\n' +
+            '    plt.show = _plt_show_patched\n' +
+            'except Exception:\n' +
+            '    pass\n'
+          );
+
+          window.__pyodide         = py;
+          window.__pyodideProgress = 100;
+          window.__pyodideStage    = 'Ready';
+          window.__pyodideReady    = true;
+          console.log('[Pyodide] Ready');
+
+        } catch (err) {
+          console.warn('[Pyodide] Skipped:', err.message);
+          window.__pyodideError = err.message || String(err);
+          window.__pyodideStage = 'Unavailable';
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

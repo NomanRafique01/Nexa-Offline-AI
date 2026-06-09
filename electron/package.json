@@ -1,0 +1,80 @@
+{
+  "name": "nexa-offline-ai",
+  "version": "1.0.0",
+  "description": "Nexa - Your Private Offline AI Assistant",
+  "author": "Nexa Team",
+  "license": "MIT",
+  "main": "main.js",
+  "homepage": "./",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "electron-squirrel-startup": "^1.1.0"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-squirrel-startup": "^1.1.0"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "cross-env NODE_ENV=development electron .",
+    "build-frontend": "cd ../frontend && npm run build",
+    "build": "npm run build-frontend && npm run build-electron",
+    "build-electron": "electron-builder",
+    "dist": "npm run build && electron-builder -c.extraMetadata.main=main.js --publish=never",
+    "dist-all": "npm run dist -- --win --mac --linux",
+    "dist-windows": "npm run dist -- --win",
+    "pack": "electron-builder --dir",
+    "reset": "node -e \"const Store = require('electron-store'); const s = new Store({name: 'nexa'}); s.clear(); console.log('Store cleared!')\"",
+    "predist": "npm run build-frontend"
+  },
+  "build": {
+    "appId": "com.nexa.app",
+    "productName": "Nexa Offline AI",
+    "directories": {
+      "buildResources": "../assets",
+      "output": "../release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "loading.js",
+      "loading.html",
+      "loading.css",
+      "loading-preload-bridge.js",
+      "../frontend/build/**/*",
+      "../backend/**/*",
+      "../ollama/**/*",
+      "../assets/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "../assets/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Nexa Offline AI"
+    },
+    "portable": {
+      "artifactName": "Nexa-${version}-portable.exe"
+    }
+  }
+}

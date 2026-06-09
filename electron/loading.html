@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexa Loading</title>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; background: #f4f7f6; }
+  </style>
+  <link rel="stylesheet" href="./loading.css" />
+</head>
+<body>
+  <div class="ls-screen">
+    <div class="ls-orb ls-orb-1"></div>
+    <div class="ls-orb ls-orb-2"></div>
+    <div class="ls-center">
+      <div class="ls-logo-wrap">
+        <svg width="96" height="96" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="100" height="100" rx="22" fill="#ffb300"/>
+          <g stroke="#004953" stroke-width="3.5" stroke-linecap="round" fill="none">
+            <line x1="36" y1="22" x2="36" y2="10"/><line x1="50" y1="22" x2="50" y2="6"/><line x1="64" y1="22" x2="64" y2="10"/>
+            <line x1="36" y1="78" x2="36" y2="90"/><line x1="50" y1="78" x2="50" y2="94"/><line x1="64" y1="78" x2="64" y2="90"/>
+            <line x1="22" y1="36" x2="10" y2="36"/><line x1="22" y1="50" x2="6" y2="50"/><line x1="22" y1="64" x2="10" y2="64"/>
+            <line x1="78" y1="36" x2="90" y2="36"/><line x1="78" y1="50" x2="94" y2="50"/><line x1="78" y1="64" x2="90" y2="64"/>
+          </g>
+          <g fill="#004953">
+            <circle cx="36" cy="8" r="4"/><circle cx="50" cy="4" r="4"/><circle cx="64" cy="8" r="4"/>
+            <circle cx="36" cy="92" r="4"/><circle cx="50" cy="96" r="4"/><circle cx="64" cy="92" r="4"/>
+            <circle cx="8" cy="36" r="4"/><circle cx="4" cy="50" r="4"/><circle cx="8" cy="64" r="4"/>
+            <circle cx="92" cy="36" r="4"/><circle cx="96" cy="50" r="4"/><circle cx="92" cy="64" r="4"/>
+          </g>
+          <rect x="22" y="22" width="56" height="56" rx="8" fill="#004953"/>
+          <rect x="30" y="30" width="40" height="40" rx="5" fill="#ffb300" opacity="0.18"/>
+        </svg>
+      </div>
+      <p class="ls-name">Nexa</p>
+      <p class="ls-sub">Your private offline AI</p>
+      <div class="ls-bar-track">
+        <div class="ls-bar-fill" id="bar"></div>
+      </div>
+    </div>
+    <div class="ls-powered" aria-label="Powered by Nytheris">
+      <span class="ls-powered-label"> Developed by</span>
+      <span class="ls-powered-brand">Noman and Maryam</span>
+    </div>
+  </div>
+  <script src="./loading.js"></script>
+</body>
+</html>
