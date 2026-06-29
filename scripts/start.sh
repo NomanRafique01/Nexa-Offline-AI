@@ -1,54 +1,54 @@
-/**
- * splash.js — Nexa splash screen animation controller
- *
- * Drives the progress bar and fade-out on the Electron loading screen.
- * Loaded by loading.html in the Electron shell before the main window is ready.
- */
+#!/bin/bash
+# start.sh — Launch Nexa backend + frontend for development (macOS/Linux)
 
-const SPLASH_DURATION_MS = 5200;
+set -e
 
-/**
- * Eases a linear progress value using an ease-in-out curve.
- * @param {number} t - Linear progress from 0 to 1
- * @returns {number} Eased value from 0 to 1
- */
-function easeInOut(t) {
-  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-}
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BACKEND_DIR="$ROOT_DIR/backend"
+FRONTEND_DIR="$ROOT_DIR/frontend"
 
-/**
- * Animates the loading bar and fades out the splash screen when done.
- */
-function initSplash() {
-  const bar = document.getElementById("bar");
-  const screen = document.querySelector(".ls-screen");
+echo "🧠 Starting Nexa..."
 
-  if (!bar || !screen) {
-    console.warn("[splash] Required DOM elements not found.");
-    return;
-  }
+# ── Backend ──────────────────────────────────────────────────
+echo "[1/2] Starting backend..."
 
-  const startTime = Date.now();
+if [ ! -d "$BACKEND_DIR/venv" ]; then
+  echo "  → Creating Python virtual environment..."
+  python3 -m venv "$BACKEND_DIR/venv"
+fi
 
-  function tick() {
-    const elapsed = Date.now() - startTime;
-    const raw = Math.min(1, elapsed / SPLASH_DURATION_MS);
-    const eased = easeInOut(raw);
+source "$BACKEND_DIR/venv/bin/activate"
 
-    bar.style.width = (eased * 100) + "%";
+echo "  → Installing Python dependencies..."
+pip install -r "$BACKEND_DIR/requirements.txt" -q
 
-    if (raw < 1) {
-      requestAnimationFrame(tick);
-    } else {
-      // Brief pause then fade out
-      setTimeout(() => {
-        screen.style.transition = "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
-        screen.style.opacity = "0";
-      }, 300);
-    }
-  }
+echo "  → Launching FastAPI backend on port 8000..."
+cd "$BACKEND_DIR"
+python main.py &
+BACKEND_PID=$!
 
-  requestAnimationFrame(tick);
-}
+# ── Frontend ─────────────────────────────────────────────────
+echo "[2/2] Starting frontend..."
+cd "$FRONTEND_DIR"
 
-window.addEventListener("DOMContentLoaded", initSplash);
+if [ ! -d "node_modules" ]; then
+  echo "  → Installing npm packages..."
+  npm install
+fi
+
+echo "  → Launching React frontend on port 3000..."
+BROWSER=none npm start &
+FRONTEND_PID=$!
+
+# ── Cleanup on exit ──────────────────────────────────────────
+trap "echo '⛔ Shutting down...'; kill $BACKEND_PID $FRONTEND_PID 2>/dev/null" EXIT
+
+echo ""
+echo "✅ Nexa is running!"
+echo "   Frontend → http://localhost:3000"
+echo "   Backend  → http://127.0.0.1:8000"
+echo "   API docs → http://127.0.0.1:8000/docs"
+echo ""
+echo "Press Ctrl+C to stop."
+
+wait
