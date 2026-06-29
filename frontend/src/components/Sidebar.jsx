@@ -85,7 +85,7 @@ function AboutModal({ onClose }) {
         </div>
         <div className="about-modal-body">
           <p className="about-modal-text">
-            Nexa is a fully offline AI assistant developed by <strong>Maryam Fatima</strong> and <strong>Noman Rafique</strong>, students of BS Artificial Intelligence at NFC Institute of Engineering and Technology, Multan. It was built as part of their 2<sup>nd</sup> semester Digital Logic Design (DLD) project, reflecting their own creativity and independent development.
+            Nexa is a fully offline AI assistant developed by <strong>Noman Rafique</strong> and <strong>Maryam Fatima</strong>, students of BS Artificial Intelligence at NFC Institute of Engineering and Technology, Multan. It was built as part of their 2<sup>nd</sup> semester Digital Logic Design (DLD) project, reflecting their own creativity and independent development.
           </p>
           <p className="about-modal-text">
             This application does not exist on the internet and is designed to operate completely offline. Nexa is part of their AI startup, <strong>Nytheris</strong>, through which they aim to develop a range of innovative tools in the field of Artificial Intelligence, focusing on privacy, efficiency, and self-reliant systems.
